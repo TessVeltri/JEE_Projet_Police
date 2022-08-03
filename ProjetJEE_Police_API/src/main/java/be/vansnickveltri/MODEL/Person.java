@@ -1,11 +1,18 @@
 package be.vansnickveltri.MODEL;
 
+import be.vansnickveltri.DAO.AbstractDAOFactory;
+import be.vansnickveltri.DAO.DAO;
+
 public abstract class Person {
 	
 	// Parameters
 	private String name;
 	private String firstname;
 	private String email;
+	
+	private static AbstractDAOFactory dao = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
+	private static DAO<Person> personDAO = dao.getPersonDAO();
+
 	
 	// Default constructor
 	public Person() {}
@@ -42,6 +49,9 @@ public abstract class Person {
 		this.email = email;
 	}
 	
-	
+	public int findId () {
+		int id = personDAO.findId(this);
+		return id;
+	}
 	
 }

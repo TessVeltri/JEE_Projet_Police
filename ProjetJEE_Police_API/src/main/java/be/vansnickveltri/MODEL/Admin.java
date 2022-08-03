@@ -6,8 +6,8 @@ public class Admin extends User{
 	public Admin() {}
 
 	// Constructor
-	public Admin(String name, String firstname, String email, String matricule, String password) {
-		super(name, firstname, email, matricule, password);
+	public Admin(String name, String firstname, String email, String matricule, String password, String type) {
+		super(name, firstname, email, matricule, password, type);
 	}
 	
 }

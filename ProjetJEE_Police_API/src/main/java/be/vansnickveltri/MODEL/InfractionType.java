@@ -1,10 +1,18 @@
 package be.vansnickveltri.MODEL;
 
+import be.vansnickveltri.DAO.AbstractDAOFactory;
+import be.vansnickveltri.DAO.DAO;
+import be.vansnickveltri.DAO.InfractionTypeDAO;
+
 public class InfractionType {
 
 	// Parameters
 	private String infractionName;
 	private double infractionPrice;
+	
+	private static AbstractDAOFactory dao = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
+	private static DAO<InfractionType> infractionTypeDAO = dao.getInfractionTypeDAO();
+
 	
 	// Default constructor
 	public InfractionType() {}
@@ -32,6 +40,11 @@ public class InfractionType {
 		this.infractionPrice = infractionPrice;
 	}
 	
+	// Methods
+	public int findId () {
+		int id = infractionTypeDAO.findId(this);
+		return id;
+	}
 	
 	
 }

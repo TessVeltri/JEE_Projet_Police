@@ -4,6 +4,9 @@ import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
 
+import be.vansnickveltri.DAO.AbstractDAOFactory;
+import be.vansnickveltri.DAO.DAO;
+
 public class Vehicle {
 	
 	// Parameters
@@ -12,6 +15,10 @@ public class Vehicle {
 	private Civil civil;
 	private VehicleType vehicleType;
 	private ArrayList <Ticket> lst_ticket;
+	
+	private static AbstractDAOFactory dao = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
+	private static DAO<Vehicle> vehicleDAO = dao.getVehicleDAO();
+
 	
 	// Default constructor
 	public Vehicle() {}
@@ -57,10 +64,22 @@ public class Vehicle {
 	public void setVehicleType(VehicleType vehicleType) {
 		this.vehicleType = vehicleType;
 	}
+
+	public ArrayList<Ticket> getLst_ticket() {
+		return lst_ticket;
+	}
+
+	public void setLst_ticket(ArrayList<Ticket> lst_ticket) {
+		this.lst_ticket = lst_ticket;
+	}
 	
+	// Methods 	
 	public void addTicket(Date date, Time hour, double totalAmount, Policeman policeman) {
 		this.lst_ticket.add(new Ticket(date, hour, totalAmount, false, policeman, this));
 	}
 	
-	
+	public int findId () {
+		int id = vehicleDAO.findId(this);
+		return id;
+	}
 }

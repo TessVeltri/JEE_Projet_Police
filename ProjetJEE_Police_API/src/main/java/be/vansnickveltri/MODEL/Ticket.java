@@ -2,6 +2,10 @@ package be.vansnickveltri.MODEL;
 
 import java.sql.Time;
 import java.util.ArrayList;
+
+import be.vansnickveltri.DAO.AbstractDAOFactory;
+import be.vansnickveltri.DAO.DAO;
+
 import java.sql.Date;
 
 public class Ticket {
@@ -14,6 +18,10 @@ public class Ticket {
 	private Policeman policeman;
 	private Vehicle vehicle;
 	private ArrayList<Infraction> lst_infraction;
+	
+	private static AbstractDAOFactory dao = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
+	private static DAO<Ticket> ticketDAO = dao.getTicketDAO();
+
 	
 	// Default constructor
 	public Ticket () {}
@@ -78,9 +86,23 @@ public class Ticket {
 		this.vehicle = vehicle;
 	}
 
+	public ArrayList<Infraction> getLst_infraction() {
+		return lst_infraction;
+	}
+
+	public void setLst_infraction(ArrayList<Infraction> lst_infraction) {
+		this.lst_infraction = lst_infraction;
+	}
+
 	// Methods
 	public void addInfraction(String comment, InfractionType infractionType) {
 		this.lst_infraction.add(new Infraction(comment, this, infractionType));
 	}
+	
+	public int findId () {
+		int id = ticketDAO.findId(this);
+		return id;
+	}
+	
 
 }

@@ -6,8 +6,8 @@ public class FineCollector extends User {
 	public FineCollector() {}
 
 	// Constructor
-	public FineCollector(String name, String firstname, String email, String matricule, String password) {
-		super(name, firstname, email, matricule, password);
+	public FineCollector(String name, String firstname, String email, String matricule, String password, String type) {
+		super(name, firstname, email, matricule, password, type);
 	}
 
 }
