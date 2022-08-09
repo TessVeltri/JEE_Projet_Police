@@ -10,7 +10,7 @@ public abstract class User extends Person{
 	private String typeUser;
 	
 	private static AbstractDAOFactory dao = AbstractDAOFactory.getFactory(AbstractDAOFactory.DAO_FACTORY);
-	private static DAO<User> userDAO = dao.getUserDAO();
+	protected static DAO<User> userDAO = dao.getUserDAO();
 
 	
 	// Default constructor

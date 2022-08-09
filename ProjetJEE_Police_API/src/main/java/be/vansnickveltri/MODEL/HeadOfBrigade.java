@@ -8,8 +8,7 @@ public class HeadOfBrigade extends User {
 	private ArrayList<Policeman> lst_policeman;
 
 	// Default constructor
-	public HeadOfBrigade() {
-	}
+	public HeadOfBrigade() {}
 
 	// Constructor
 	public HeadOfBrigade(String name, String firstname, String email, String matricule, String password, String type) {
@@ -28,8 +27,13 @@ public class HeadOfBrigade extends User {
 
 	// Methods
 	public void addPoliceman(String matricule) {
-		// TODO rechercher le policier avec le matricule et le rajouter à la liste
-		this.lst_policeman.add(new Policeman());
+		Policeman policeman = new Policeman();
+		this.lst_policeman.add(policeman.find(matricule));
+	}
+	
+	public HeadOfBrigade find (int i) {
+		HeadOfBrigade h = (HeadOfBrigade) userDAO.find(i);
+		return h;
 	}
 
 	

@@ -16,6 +16,8 @@ public abstract class AbstractDAOFactory {
 	
 	public abstract DAO<User> getUserDAO();
 	
+	public abstract DAO<Policeman> getPolicemanDAO();
+	
 	public abstract DAO<Vehicle> getVehicleDAO();
 	
 	public abstract DAO<VehicleType> getVehicleTypeDAO();

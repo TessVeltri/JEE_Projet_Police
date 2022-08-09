@@ -12,18 +12,18 @@ public class TicketDAO extends DAO<Ticket>{
 		super(conn);
 	}
 
-	// TODO Methode calculateDate dans ticket pour insert en sql
 	@Override
 	public boolean create(Ticket obj) {
 		try {
             this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
             .executeUpdate(
-                    "INSERT INTO JEE_Ticket (ticketDate, isValidate, idVehicle, idUser)"
+                    "INSERT INTO JEE_Ticket (ticketDate, isValidate, idVehicle, idUser, ticketHour)"
                     + "Values('"
-                        + obj.calculateDate() + "','"
+                        + obj.getDate() + "','"
                         + obj.isValidate() + "','"
                         + obj.getVehicle().findId() + "','"
-                        + obj.getPoliceman().findId()
+                        + obj.getPoliceman().findId() + "','"
+                        + obj.getHour()
                         + "')");
             return true;
         }
@@ -35,14 +35,27 @@ public class TicketDAO extends DAO<Ticket>{
 
 	@Override
 	public boolean delete(Ticket obj) {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeUpdate("DELETE FROM JEE_Ticket WHERE idTicket = '" + obj.findId() + "'");
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
 	public boolean update(Ticket obj) {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			this.connect.createStatement()
+				.executeUpdate("UPDATE JEE_Ticket SET isValidate '" + obj.isValidate() 
+				+ "' WHERE idTicket = '" + obj.findId() + "'");
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	// TODO Vérif si la date passe bien 
@@ -61,6 +74,16 @@ public class TicketDAO extends DAO<Ticket>{
 			e.printStackTrace();
 			return -1;
 		}
+	}
+
+	@Override
+	public Ticket find(String str1, String str2) {
+		return null;
+	}
+
+	@Override
+	public Ticket find(int i) {
+		return null;
 	}
 
 }

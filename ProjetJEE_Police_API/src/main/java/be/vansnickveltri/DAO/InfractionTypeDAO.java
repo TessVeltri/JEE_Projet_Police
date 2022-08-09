@@ -72,4 +72,14 @@ public class InfractionTypeDAO extends DAO<InfractionType>{
 		}
 	}
 
+	@Override
+	public InfractionType find(String str1, String str2) {
+		return null;
+	}
+
+	@Override
+	public InfractionType find(int i) {
+		return null;
+	}
+
 }

@@ -59,4 +59,14 @@ public class VehicleTypeDAO extends DAO<VehicleType> {
 		}
 	}
 
+	@Override
+	public VehicleType find(String str1, String str2) {
+		return null;
+	}
+
+	@Override
+	public VehicleType find(int i) {
+		return null;
+	}
+
 }

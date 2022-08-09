@@ -45,7 +45,6 @@ public class InfractionDAO  extends DAO<Infraction>{
 
 	@Override
 	public boolean update(Infraction obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -64,6 +63,16 @@ public class InfractionDAO  extends DAO<Infraction>{
 			e.printStackTrace();
 			return -1;
 		}
+	}
+
+	@Override
+	public Infraction find(String str1, String str2) {
+		return null;
+	}
+
+	@Override
+	public Infraction find(int i) {
+		return null;
 	}
 
 }

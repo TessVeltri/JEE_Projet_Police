@@ -44,7 +44,7 @@ public class VehicleDAO extends DAO<Vehicle>{
 		}
 	}
 
-	// Update the insurance
+	// Update only the insurance
 	@Override
 	public boolean update(Vehicle obj) {
 		try {
@@ -73,6 +73,16 @@ public class VehicleDAO extends DAO<Vehicle>{
 			e.printStackTrace();
 			return -1;
 		}
+	}
+
+	@Override
+	public Vehicle find(String str1, String str2) {
+		return null;
+	}
+
+	@Override
+	public Vehicle find(int i) {
+		return null;
 	}
 
 }

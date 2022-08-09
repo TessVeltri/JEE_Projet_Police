@@ -5,6 +5,7 @@ import java.sql.Connection;
 import be.vansnickveltri.MODEL.Infraction;
 import be.vansnickveltri.MODEL.InfractionType;
 import be.vansnickveltri.MODEL.Person;
+import be.vansnickveltri.MODEL.Policeman;
 import be.vansnickveltri.MODEL.Ticket;
 import be.vansnickveltri.MODEL.User;
 import be.vansnickveltri.MODEL.Vehicle;
@@ -32,6 +33,10 @@ public class DAOFactory extends AbstractDAOFactory{
 
 	public DAO<User> getUserDAO() {
 		return new UserDAO (conn);
+	}
+	
+	public DAO<Policeman> getPolicemanDAO(){
+		return new PolicemanDAO (conn);
 	}
 
 	public DAO<Vehicle> getVehicleDAO() {

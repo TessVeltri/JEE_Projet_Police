@@ -14,19 +14,25 @@ public class PersonDAO extends DAO<Person> {
 
 	@Override
 	public boolean create(Person obj) {
-		// TODO Auto-generated method stub
-		return false;
+		try {
+			this.connect.createStatement()
+					.executeUpdate("INSERT INTO JEE_Civil(name, firstname, email) " 
+							+ "Values('" + obj.getName() + "', '" + obj.getFirstname() + "', '" + obj.getEmail()
+							+ "')");
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
 	public boolean delete(Person obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean update(Person obj) {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -46,6 +52,16 @@ public class PersonDAO extends DAO<Person> {
 			e.printStackTrace();
 			return -1;
 		}
+	}
+
+	@Override
+	public Person find(String str1, String str2) {
+		return null;
+	}
+
+	@Override
+	public Person find(int i) {
+		return null;
 	}
 
 }
