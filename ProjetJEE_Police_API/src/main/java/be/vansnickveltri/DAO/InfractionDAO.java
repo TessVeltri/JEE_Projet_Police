@@ -2,11 +2,14 @@ package be.vansnickveltri.DAO;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.sql.ResultSet;
 
 import be.vansnickveltri.MODEL.Infraction;
+import be.vansnickveltri.MODEL.InfractionType;
+import be.vansnickveltri.MODEL.Ticket;
 
-public class InfractionDAO  extends DAO<Infraction>{
+public class InfractionDAO extends DAO<Infraction> {
 
 	public InfractionDAO(Connection conn) {
 		super(conn);
@@ -16,18 +19,14 @@ public class InfractionDAO  extends DAO<Infraction>{
 	public boolean create(Infraction obj) {
 		try {
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-            .executeUpdate(
-                    "INSERT INTO JEE_Infraction (infractionComment, idTicket, idInfractiontType)"
-                    + "Values('"
-                        + obj.getComment() + "','"
-                    	+ obj.getTicket().findId() + "','"
-                        + obj.getInfractionType().findId() + "')");
-            return true;
-			
-		}
-		catch (SQLException e) {
+					.executeUpdate("INSERT INTO JEE_Infraction (infractionComment, idTicket, idInfractiontType)"
+							+ "Values('" + obj.getComment() + "','" + obj.getTicket().findId() + "','"
+							+ obj.getInfractionType().findId() + "')");
+			return true;
+
+		} catch (SQLException e) {
 			e.printStackTrace();
-            return false;
+			return false;
 		}
 	}
 
@@ -45,7 +44,14 @@ public class InfractionDAO  extends DAO<Infraction>{
 
 	@Override
 	public boolean update(Infraction obj) {
-		return false;
+		try {
+			this.connect.createStatement().executeUpdate("UPDATE JEE_Infraction SET infractionComment = '"
+					+ obj.getComment() + "' WHERE idInfraction = '" + obj.findId() + "'");
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
@@ -54,7 +60,8 @@ public class InfractionDAO  extends DAO<Infraction>{
 		try {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
-							"SELECT idInfraction FROM JEE_Infraction WHERE idTicket = '" + obj.getTicket().findId() + "' AND idInfractiontType = '" + obj.getInfractionType().findId()+ "'");
+							"SELECT idInfraction FROM JEE_Infraction WHERE idTicket = '" + obj.getTicket().findId()
+									+ "' AND idInfractiontType = '" + obj.getInfractionType().findId() + "'");
 			if (result.first()) {
 				id = result.getInt(1);
 			}
@@ -72,7 +79,69 @@ public class InfractionDAO  extends DAO<Infraction>{
 
 	@Override
 	public Infraction find(int i) {
-		return null;
+		Infraction infraction = null;
+		Ticket ticket = new Ticket();
+		InfractionType type = new InfractionType();
+		try {
+			ResultSet result = this.connect
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
+							"SELECT infractionComment, idTicket, idInfractiontType FROM JEE_Infraction WHERE idInfraction = '"
+									+ i + "'");
+			if (result.first()) {
+				ticket = ticket.find(result.getInt("idTicket"));
+				type = type.find(result.getInt("idInfractiontType"));
+				infraction = new Infraction(result.getString("infractionComment"), ticket, type);
+			}
+			return infraction;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public ArrayList<Infraction> getAll() {
+		ArrayList<Infraction> lst_infractions = new ArrayList<>();
+		Ticket ticket = new Ticket();
+		InfractionType type = new InfractionType();
+		try {
+			ResultSet result = this.connect
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
+							"SELECT infractionComment, idTicket, idInfractiontType FROM JEE_Infraction ORDER BY idInfraction'");
+			while (result.next()) {
+				ticket = ticket.find(result.getInt("idTicket"));
+				type = type.find(result.getInt("idInfractiontType"));
+				Infraction infraction = new Infraction(result.getString("infractionComment"), ticket, type);
+				lst_infractions.add(infraction);
+			}
+			return lst_infractions;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public ArrayList<Infraction> getAll(int i) {
+		ArrayList<Infraction> lst_infractions = new ArrayList<>();
+		Ticket ticket = new Ticket();
+		ticket = ticket.find(i);
+		InfractionType type = new InfractionType();
+		try {
+			ResultSet result = this.connect
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
+							"SELECT infractionComment, idTicket, idInfractiontType FROM JEE_Infraction WHERE idTicket = '"
+									+ i + "'ORDER BY idInfraction'");
+			while (result.next()) {
+				type = type.find(result.getInt("idInfractiontType"));
+				Infraction infraction = new Infraction(result.getString("infractionComment"), ticket, type);
+				lst_infractions.add(infraction);
+			}
+			return lst_infractions;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 }

@@ -3,6 +3,7 @@ package be.vansnickveltri.DAO;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import be.vansnickveltri.MODEL.Policeman;
 import be.vansnickveltri.MODEL.HeadOfBrigade;
@@ -19,7 +20,8 @@ public class PolicemanDAO extends DAO<Policeman> {
 			this.connect.createStatement().executeUpdate(
 					"INSERT INTO JEE_User(name, firstname, matricule, password, typeUser, idHeadOfBrigade) "
 							+ "Values('" + obj.getName() + "', '" + obj.getFirstname() + "', '" + obj.getMatricule()
-							+ "', '" + obj.getPassword() + "', '" + obj.getTypeUser() + "','" + obj.getHeadOfBrigade().findId()+ "')");
+							+ "', '" + obj.getPassword() + "', '" + obj.getTypeUser() + "','"
+							+ obj.getHeadOfBrigade().findId() + "')");
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -61,13 +63,13 @@ public class PolicemanDAO extends DAO<Policeman> {
 		HeadOfBrigade head = new HeadOfBrigade();
 		try {
 			ResultSet result = this.connect
-					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
-							"SELECT name, firstname, email, matricule, password, typeUser, idHeadOfBrigade"
-									+ "FROM JEE_User WHERE matricule = '" + matricule + "' AND password = '" + password + "'");
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeQuery("SELECT name, firstname, email, matricule, password, typeUser, idHeadOfBrigade"
+							+ "FROM JEE_User WHERE matricule = '" + matricule + "' AND password = '" + password + "'");
 			if (result.first())
 				head = head.find(result.getInt("idHeadOfBrigade"));
-				policeman = new Policeman(result.getString("name"), result.getString("firstname"),result.getString("email"),matricule,
-						password, result.getString("typeUser"), head);
+			policeman = new Policeman(result.getString("name"), result.getString("firstname"),
+					result.getString("email"), matricule, password, result.getString("typeUser"), head);
 			return policeman;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -77,9 +79,71 @@ public class PolicemanDAO extends DAO<Policeman> {
 
 	@Override
 	public Policeman find(int i) {
-		return null;
+		Policeman policeman = new Policeman();
+		HeadOfBrigade head = new HeadOfBrigade();
+		try {
+			ResultSet result = this.connect
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeQuery("SELECT name, firstname, email, matricule, password, typeUser, idHeadOfBrigade"
+							+ "FROM JEE_User WHERE idUser = '" + i + "'");
+			if (result.first())
+				head = head.find(result.getInt("idHeadOfBrigade"));
+			policeman = new Policeman(result.getString("name"), result.getString("firstname"),
+					result.getString("email"), result.getString("matricule"), result.getString("password"),
+					result.getString("typeUser"), head);
+			return policeman;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
-	
-	
+
+	@Override
+	public ArrayList<Policeman> getAll() {
+		ArrayList<Policeman> lst_users = new ArrayList<>();
+		try {
+			ResultSet result = this.connect
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
+							"SELECT name, firstname, email, matricule, password, typeUser, idHeadOfBrigade FROM JEE_User"
+									+ "WHERE idHeadOfBrigade IS NOT NULL");
+			while (result.next()) {
+				HeadOfBrigade head = new HeadOfBrigade();
+				head = head.find(result.getInt("idHeadOfBrigade"));
+				Policeman policeman = new Policeman(result.getString("name"), result.getString("firstname"),
+						result.getString("email"), result.getString("maticule"), result.getString("password"),
+						result.getString("typeUser"), head);
+
+				lst_users.add(policeman);
+			}
+			return lst_users;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public ArrayList<Policeman> getAll(int i) {
+		ArrayList<Policeman> lst_users = new ArrayList<>();
+		HeadOfBrigade head = new HeadOfBrigade();
+		head = head.find(i);
+		try {
+			ResultSet result = this.connect
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
+							"SELECT name, firstname, email, matricule, password, typeUser, idHeadOfBrigade FROM JEE_User"
+									+ "WHERE idHeadOfBrigade = '" + i + "'");
+			while (result.next()) {
+				Policeman policeman = new Policeman(result.getString("name"), result.getString("firstname"),
+						result.getString("email"), result.getString("maticule"), result.getString("password"),
+						result.getString("typeUser"), head);
+
+				lst_users.add(policeman);
+			}
+			return lst_users;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 
 }

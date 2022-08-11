@@ -1,6 +1,7 @@
 package be.vansnickveltri.DAO;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 
 public abstract class DAO<T> {
 
@@ -21,4 +22,9 @@ public abstract class DAO<T> {
 	public abstract T find(String str1, String str2);
 
 	public abstract T find(int i);
+	
+	public abstract ArrayList<T> getAll ();
+	
+	public abstract ArrayList<T> getAll (int i);	
+	
 }

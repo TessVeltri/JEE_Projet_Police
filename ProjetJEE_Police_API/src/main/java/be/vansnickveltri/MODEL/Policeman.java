@@ -46,13 +46,24 @@ public class Policeman extends User{
 	}
 
 	// Methods
-	public void addTicket(Date date, Time hour, double totalAmount, Vehicle vehicle) {
-		this.lst_ticket.add(new Ticket(date, hour, totalAmount, false, this, vehicle));
+	public boolean create (Policeman obj) {
+		return policemanDAO.create(obj);
 	}
 	
-	public Policeman find (String matricule) {
-		Policeman p = policemanDAO.find(matricule, "");
-		return p;
+	public int findId (Policeman obj) {
+		return policemanDAO.findId(obj);
+	}
+	
+	public Policeman find (String matricule, String password) {
+		return policemanDAO.find(matricule, password);
+	}
+	
+	public Policeman find (int i) {
+		return policemanDAO.find(i);
+	}
+	
+	public ArrayList<Policeman> getAllPoliceman (){
+		return policemanDAO.getAll();
 	}
 
 }

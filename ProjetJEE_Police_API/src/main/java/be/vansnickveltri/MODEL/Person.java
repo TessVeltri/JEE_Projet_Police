@@ -1,5 +1,7 @@
 package be.vansnickveltri.MODEL;
 
+import java.util.ArrayList;
+
 import be.vansnickveltri.DAO.AbstractDAOFactory;
 import be.vansnickveltri.DAO.DAO;
 
@@ -49,9 +51,28 @@ public abstract class Person {
 		this.email = email;
 	}
 	
+	// Methods
+	public boolean create (Person obj) {
+		return personDAO.create(obj);
+	}
+	
+	public boolean delete (Person obj) {
+		return personDAO.delete(obj);
+	}
+	
+	public boolean update (Person obj) {
+		return personDAO.update(obj);
+	}
 	public int findId () {
-		int id = personDAO.findId(this);
-		return id;
+		return personDAO.findId(this);
+	}
+	
+	public Person find (int i) {
+		return personDAO.find(i);
+	}
+	
+	public ArrayList<Person> getAll (){
+		return personDAO.getAll();
 	}
 	
 }

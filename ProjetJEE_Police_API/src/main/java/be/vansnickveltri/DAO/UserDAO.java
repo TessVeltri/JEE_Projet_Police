@@ -3,6 +3,7 @@ package be.vansnickveltri.DAO;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import be.vansnickveltri.MODEL.Admin;
 import be.vansnickveltri.MODEL.FineCollector;
@@ -22,7 +23,8 @@ public class UserDAO extends DAO<User> {
 			this.connect.createStatement().executeUpdate(
 					"INSERT INTO JEE_User(name, firstname, matricule, password, typeUser, email ,  idHeadOfBrigade) "
 							+ "Values('" + obj.getName() + "', '" + obj.getFirstname() + "', '" + obj.getMatricule()
-							+ "', '" + obj.getPassword() + "', '" + obj.getTypeUser() + "', '" + obj.getEmail() + "', NULL)");
+							+ "', '" + obj.getPassword() + "', '" + obj.getTypeUser() + "', '" + obj.getEmail()
+							+ "', NULL)");
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -32,12 +34,28 @@ public class UserDAO extends DAO<User> {
 
 	@Override
 	public boolean delete(User obj) {
-		return false;
+		try {
+			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeUpdate("DELETE FROM JEE_User WHERE idUser = '" + obj.findId() + "'");
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
 	public boolean update(User obj) {
-		return false;
+		try {
+			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeUpdate("UPDATE FROM JEE_User " + "SET name = '" + obj.getName() + "', firstname = '"
+							+ obj.getFirstname() + "', email = '" + obj.getEmail() + "', typeUser = '"
+							+ obj.getTypeUser() + "'WHERE idUser = '" + obj.findId() + "'");
+			return true;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
@@ -116,6 +134,48 @@ public class UserDAO extends DAO<User> {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	@Override
+	public ArrayList<User> getAll() {
+		ArrayList<User> lst_users = new ArrayList<>();
+		try {
+			ResultSet result = this.connect
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
+							"SELECT name, firstname, email, matricule, password, typeUser, idHeadOfBrigade FROM JEE_User ORDER BY idUser");
+			while (result.next()) {
+				User user = null;
+				HeadOfBrigade head = new HeadOfBrigade();
+				if (result.getString("typeUser").equals("Head of brigade")) {
+					user = new HeadOfBrigade(result.getString("name"), result.getString("firstname"),
+							result.getString("email"), result.getString("maticule"), result.getString("password"),
+							result.getString("typeUser"));
+				} else if (result.getString("typeUser").equals("Policeman")) {
+					head = head.find(result.getInt("idHeadOfBrigade"));
+					user = new Policeman(result.getString("name"), result.getString("firstname"),
+							result.getString("email"), result.getString("maticule"), result.getString("password"),
+							result.getString("typeUser"), head);
+				} else if (result.getString("typeUser").equals("Fine collector")) {
+					user = new FineCollector(result.getString("name"), result.getString("firstname"),
+							result.getString("email"), result.getString("maticule"), result.getString("password"),
+							result.getString("typeUser"));
+				} else if (result.getString("typeUser").equals("Admin")) {
+					user = new Admin(result.getString("name"), result.getString("firstname"),
+							result.getString("email"), result.getString("maticule"), result.getString("password"),
+							result.getString("typeUser"));
+				}
+				lst_users.add(user);
+			}
+			return lst_users;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public ArrayList<User> getAll(int i) {
+		return null;
 	}
 
 }

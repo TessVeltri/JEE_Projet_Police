@@ -15,6 +15,7 @@ public class Ticket {
 	private Time hour;
 	private double totalAmount;
 	private boolean validate;
+	private boolean payed;
 	private Policeman policeman;
 	private Vehicle vehicle;
 	private ArrayList<Infraction> lst_infraction;
@@ -27,11 +28,12 @@ public class Ticket {
 	public Ticket () {}
 	
 	// Constructor
-	public Ticket(Date date, Time hour, double totalAmount, boolean validate, Policeman policeman, Vehicle vehicle) {
+	public Ticket(Date date, Time hour, double totalAmount, boolean validate, boolean payed, Policeman policeman, Vehicle vehicle) {
 		this.date = date;
 		this.hour = hour;
 		this.totalAmount = totalAmount;
 		this.validate = validate;
+		this.payed = payed;
 		this.policeman = policeman;
 		this.vehicle = vehicle;
 		lst_infraction = new ArrayList<Infraction>();
@@ -70,6 +72,14 @@ public class Ticket {
 		this.validate = validate;
 	}
 
+	public boolean isPayed() {
+		return payed;
+	}
+
+	public void setPayed(boolean payed) {
+		this.payed = payed;
+	}
+	
 	public Policeman getPoliceman() {
 		return policeman;
 	}
@@ -95,14 +105,42 @@ public class Ticket {
 	}
 
 	// Methods
-	public void addInfraction(String comment, InfractionType infractionType) {
-		this.lst_infraction.add(new Infraction(comment, this, infractionType));
+	public void calculate () {
+		double total = 0;
+		
+		for(Infraction infractions : this.getLst_infraction())
+		{
+			total += infractions.getInfractionType().getInfractionPrice();
+		}
+		setTotalAmount(total);
+	}
+	
+	public boolean create (Ticket obj) {
+		return ticketDAO.create(obj);
+	}
+	
+	public boolean delete (Ticket obj) {
+		return ticketDAO.delete(obj);
+	}
+	
+	public boolean update (Ticket obj) {
+		return ticketDAO.update(obj);
 	}
 	
 	public int findId () {
-		int id = ticketDAO.findId(this);
-		return id;
+		return ticketDAO.findId(this);
 	}
 	
+	public Ticket find (int i) {
+		return ticketDAO.find(i);
+	}
+	
+	public ArrayList<Ticket> getAll(){
+		return ticketDAO.getAll();
+	}
+	
+	public ArrayList<Ticket> getAll (int i){
+		return ticketDAO.getAll(i);
+	}
 
 }

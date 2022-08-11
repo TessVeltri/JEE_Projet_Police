@@ -14,11 +14,5 @@ public class Civil extends Person{
 		super(name, firstname, email);
 		lst_vehicle = new ArrayList<Vehicle>();
 	}
-	
-	// Methods
-	public void addVehicle(String plate, VehicleType vehicleType) {
-		this.lst_vehicle.add(new Vehicle(plate, false, this, vehicleType));
-	}
-	
 
 }

@@ -3,6 +3,7 @@ package be.vansnickveltri.DAO;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import be.vansnickveltri.MODEL.InfractionType;
 
@@ -46,7 +47,7 @@ public class InfractionTypeDAO extends DAO<InfractionType>{
 	public boolean update(InfractionType obj) {
 		try {
 			this.connect.createStatement()
-				.executeUpdate("UPDATE JEE_InfractionType SET infractionPrice '" + obj.getInfractionPrice() 
+				.executeUpdate("UPDATE JEE_InfractionType SET infractionPrice = '" + obj.getInfractionPrice() 
 				+ "' WHERE infractionName = '" + obj.getInfractionName() + "'");
 			return true;
 		} catch (SQLException e) {
@@ -79,6 +80,41 @@ public class InfractionTypeDAO extends DAO<InfractionType>{
 
 	@Override
 	public InfractionType find(int i) {
+		InfractionType type = null;
+		try {
+			ResultSet result = this.connect
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeQuery("SELECT infractionName, infractionPrice FROM JEE_InfractionType WHERE idInfractionType = '" + i + "'");
+			if (result.first()) {
+				type = new InfractionType (result.getString("infractionName"), result.getDouble("infractionPrice"));
+			}
+			return type;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public ArrayList<InfractionType> getAll() {
+		ArrayList<InfractionType> lst_infractionTypes = new ArrayList<>();
+		try {
+			ResultSet result = this.connect
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
+							"SELECT infractionName, infractionPrice FROM JEE_InfractionType ORDER BY idInfractionType'");
+			while (result.next()) {
+				InfractionType type = new InfractionType(result.getString("infractionName"), result.getDouble("infractionPrice"));
+				lst_infractionTypes.add(type);
+			}
+			return lst_infractionTypes;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public ArrayList<InfractionType> getAll(int i) {
 		return null;
 	}
 

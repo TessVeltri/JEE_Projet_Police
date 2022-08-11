@@ -26,11 +26,6 @@ public class HeadOfBrigade extends User {
 	}
 
 	// Methods
-	public void addPoliceman(String matricule) {
-		Policeman policeman = new Policeman();
-		this.lst_policeman.add(policeman.find(matricule));
-	}
-	
 	public HeadOfBrigade find (int i) {
 		HeadOfBrigade h = (HeadOfBrigade) userDAO.find(i);
 		return h;

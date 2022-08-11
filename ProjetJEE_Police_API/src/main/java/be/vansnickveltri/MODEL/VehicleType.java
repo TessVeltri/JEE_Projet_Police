@@ -1,5 +1,7 @@
 package be.vansnickveltri.MODEL;
 
+import java.util.ArrayList;
+
 import be.vansnickveltri.DAO.AbstractDAOFactory;
 import be.vansnickveltri.DAO.DAO;
 
@@ -30,10 +32,24 @@ public class VehicleType {
 	}
 	
 	// Methods
+	public boolean create (VehicleType obj) {
+		return vehicleTypeDAO.create(obj);
+	}
+	
+	public boolean delete (VehicleType obj) {
+		return vehicleTypeDAO.delete(obj);
+	}
 	
 	public int findId () {
-		int id = vehicleTypeDAO.findId(this);
-		return id;
+		return vehicleTypeDAO.findId(this);
+	}
+	
+	public VehicleType find (int i) {
+		return vehicleTypeDAO.find(i);
+	}
+	
+	public ArrayList<VehicleType> getAll (){
+		return vehicleTypeDAO.getAll();
 	}
 	
 }

@@ -3,6 +3,7 @@ package be.vansnickveltri.DAO;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import be.vansnickveltri.MODEL.VehicleType;
 
@@ -66,6 +67,41 @@ public class VehicleTypeDAO extends DAO<VehicleType> {
 
 	@Override
 	public VehicleType find(int i) {
+		VehicleType type = null;
+		try {
+			ResultSet result = this.connect
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
+							"SELECT vehicleName FROM JEE_VehicleType WHERE idVehicleType = '" + i + "'");
+			if (result.first()) {
+				type = new VehicleType(result.getString("vehicleName"));
+			}
+			return type;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public ArrayList<VehicleType> getAll() {
+		ArrayList<VehicleType> lst_vehicleType = new ArrayList<>();
+		try {
+			ResultSet result = this.connect
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
+							"SELECT vehicleName FROM JEE_VehicleType ORDER BY idVehicleType'");
+			while (result.next()) {
+				VehicleType type = new VehicleType(result.getString("vehicleName"));
+				lst_vehicleType.add(type);
+			}
+			return lst_vehicleType;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public ArrayList<VehicleType> getAll(int i) {
 		return null;
 	}
 

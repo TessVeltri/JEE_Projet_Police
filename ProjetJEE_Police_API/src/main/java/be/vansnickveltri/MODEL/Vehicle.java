@@ -73,13 +73,28 @@ public class Vehicle {
 		this.lst_ticket = lst_ticket;
 	}
 	
-	// Methods 	
-	public void addTicket(Date date, Time hour, double totalAmount, Policeman policeman) {
-		this.lst_ticket.add(new Ticket(date, hour, totalAmount, false, policeman, this));
+	// Methods 		
+	public boolean create (Vehicle obj) {
+		return vehicleDAO.create(obj);
+	}
+	
+	public boolean delete (Vehicle obj) {
+		return vehicleDAO.delete(obj);
+	}
+	
+	public boolean update (Vehicle obj) {
+		return vehicleDAO.update(obj);
 	}
 	
 	public int findId () {
-		int id = vehicleDAO.findId(this);
-		return id;
+		return vehicleDAO.findId(this);
+	}
+	
+	public Vehicle find (int i) {
+		return vehicleDAO.find(i);
+	}
+	
+	public ArrayList<Vehicle> getAll (){
+		return vehicleDAO.getAll();
 	}
 }

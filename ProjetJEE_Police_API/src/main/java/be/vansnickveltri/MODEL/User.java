@@ -1,5 +1,7 @@
 package be.vansnickveltri.MODEL;
 
+import java.util.ArrayList;
+
 import be.vansnickveltri.DAO.AbstractDAOFactory;
 import be.vansnickveltri.DAO.DAO;
 
@@ -49,10 +51,34 @@ public abstract class User extends Person{
 		this.typeUser = typeUser;
 	}
 
+	// Methods
+	public boolean create (User user) {
+		return userDAO.create(user);
+	}
+	
+	public boolean delete (User user) {
+		return userDAO.delete(user);
+	}
+	
+	public boolean update (User user) {
+		return userDAO.update(user);
+	}
+	
 	@Override
 	public int findId() {
-		int id = userDAO.findId(this);
-		return id;
+		return userDAO.findId(this);
+	}
+	
+	public User find (String matricule, String password) {
+		return userDAO.find(matricule, password);
+	}
+	
+	public User find (int i) {
+		return userDAO.find(i);
+	}
+	
+	public ArrayList<User> getAllUser(){
+		return userDAO.getAll();
 	}
 	
 }

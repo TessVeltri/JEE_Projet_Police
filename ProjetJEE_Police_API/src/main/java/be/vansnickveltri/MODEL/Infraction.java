@@ -1,5 +1,7 @@
 package be.vansnickveltri.MODEL;
 
+import java.util.ArrayList;
+
 import be.vansnickveltri.DAO.AbstractDAOFactory;
 import be.vansnickveltri.DAO.DAO;
 
@@ -49,10 +51,33 @@ public class Infraction {
 		this.infractionType = infractionType;
 	}
 	
-	public int findId () {
-		int id = infractionDAO.findId(this);
-		return id;
+	// Methods
+	public boolean create (Infraction obj) {
+		return infractionDAO.create(obj);
 	}
 	
+	public boolean delete (Infraction obj) {
+		return infractionDAO.delete(obj);
+	}
+	
+	public boolean update (Infraction obj) {
+		return infractionDAO.update(obj);
+	}
+	
+	public int findId () {
+		return infractionDAO.findId(this);
+	}
+	
+	public Infraction find (int i) {
+		return infractionDAO.find(i);
+	}
+	
+	public ArrayList<Infraction> getAll (){
+		return infractionDAO.getAll();
+	}
+	
+	public ArrayList<Infraction> getAll (int i){
+		return infractionDAO.getAll(i);
+	}
 	
 }
