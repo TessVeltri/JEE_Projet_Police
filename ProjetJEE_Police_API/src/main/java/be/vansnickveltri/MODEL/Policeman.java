@@ -62,8 +62,8 @@ public class Policeman extends User{
 		return policemanDAO.find(i);
 	}
 	
-	public ArrayList<Policeman> getAllPoliceman (){
-		return policemanDAO.getAll();
+	public ArrayList<Policeman> findAllPoliceman (){
+		return policemanDAO.findAll();
 	}
 
 }

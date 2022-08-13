@@ -23,8 +23,8 @@ public abstract class DAO<T> {
 
 	public abstract T find(int i);
 	
-	public abstract ArrayList<T> getAll ();
+	public abstract ArrayList<T> findAll ();
 	
-	public abstract ArrayList<T> getAll (int i);	
+	public abstract ArrayList<T> findAll (int i);	
 	
 }

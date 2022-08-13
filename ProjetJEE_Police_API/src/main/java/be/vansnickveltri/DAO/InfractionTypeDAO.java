@@ -16,14 +16,21 @@ public class InfractionTypeDAO extends DAO<InfractionType>{
 	@Override
 	public boolean create(InfractionType obj) {
 		try {
-            this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-            .executeUpdate(
-                    "INSERT INTO JEE_InfractionType (infractionName, infractionPrice)"
-                    + "Values('"
-                        + obj.getInfractionName() + "','"
-                        + obj.getInfractionPrice()
-                        + "')");
-            return true;
+			InfractionType it = new InfractionType();
+			it = it.find(obj.findId());
+			if(it == null) {
+				this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+	            .executeUpdate(
+	                    "INSERT INTO JEE_InfractionType (infractionName, infractionPrice)"
+	                    + " Values('"
+	                        + obj.getInfractionName() + "',"
+	                        + obj.getInfractionPrice()
+	                        + ")");
+	            return true;
+			} else {
+				return false;
+			}
+            
         }
         catch(SQLException e) {
             e.printStackTrace();
@@ -47,8 +54,8 @@ public class InfractionTypeDAO extends DAO<InfractionType>{
 	public boolean update(InfractionType obj) {
 		try {
 			this.connect.createStatement()
-				.executeUpdate("UPDATE JEE_InfractionType SET infractionPrice = '" + obj.getInfractionPrice() 
-				+ "' WHERE infractionName = '" + obj.getInfractionName() + "'");
+				.executeUpdate("UPDATE JEE_InfractionType SET infractionPrice = " + obj.getInfractionPrice() 
+				+ " WHERE infractionName = '" + obj.getInfractionName() + "'");
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -84,7 +91,7 @@ public class InfractionTypeDAO extends DAO<InfractionType>{
 		try {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeQuery("SELECT infractionName, infractionPrice FROM JEE_InfractionType WHERE idInfractionType = '" + i + "'");
+					.executeQuery("SELECT infractionName, infractionPrice FROM JEE_InfractionType WHERE idInfractionType = " + i );
 			if (result.first()) {
 				type = new InfractionType (result.getString("infractionName"), result.getDouble("infractionPrice"));
 			}
@@ -96,12 +103,12 @@ public class InfractionTypeDAO extends DAO<InfractionType>{
 	}
 
 	@Override
-	public ArrayList<InfractionType> getAll() {
+	public ArrayList<InfractionType> findAll() {
 		ArrayList<InfractionType> lst_infractionTypes = new ArrayList<>();
 		try {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
-							"SELECT infractionName, infractionPrice FROM JEE_InfractionType ORDER BY idInfractionType'");
+							"SELECT infractionName, infractionPrice FROM JEE_InfractionType ORDER BY idInfractionType");
 			while (result.next()) {
 				InfractionType type = new InfractionType(result.getString("infractionName"), result.getDouble("infractionPrice"));
 				lst_infractionTypes.add(type);
@@ -114,7 +121,7 @@ public class InfractionTypeDAO extends DAO<InfractionType>{
 	}
 
 	@Override
-	public ArrayList<InfractionType> getAll(int i) {
+	public ArrayList<InfractionType> findAll(int i) {
 		return null;
 	}
 

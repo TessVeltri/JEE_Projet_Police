@@ -16,10 +16,17 @@ public class VehicleTypeDAO extends DAO<VehicleType> {
 	@Override
 	public boolean create(VehicleType obj) {
 		try {
-			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeUpdate("INSERT INTO JEE_VehicleType(vehicleName)" + 
+			VehicleType vt = null;
+			vt = vt.find(obj.findId());
+			if (vt == null) {
+				this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeUpdate("INSERT INTO JEE_VehicleType(vehicleName) " + 
 							"Values('" + obj.getVehicleName() + "')");
-			return true;
+				return true;
+			} else {
+				return false;
+			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -71,7 +78,7 @@ public class VehicleTypeDAO extends DAO<VehicleType> {
 		try {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
-							"SELECT vehicleName FROM JEE_VehicleType WHERE idVehicleType = '" + i + "'");
+							"SELECT vehicleName FROM JEE_VehicleType WHERE idVehicleType = " + i );
 			if (result.first()) {
 				type = new VehicleType(result.getString("vehicleName"));
 			}
@@ -83,12 +90,12 @@ public class VehicleTypeDAO extends DAO<VehicleType> {
 	}
 
 	@Override
-	public ArrayList<VehicleType> getAll() {
+	public ArrayList<VehicleType> findAll() {
 		ArrayList<VehicleType> lst_vehicleType = new ArrayList<>();
 		try {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
-							"SELECT vehicleName FROM JEE_VehicleType ORDER BY idVehicleType'");
+							"SELECT vehicleName FROM JEE_VehicleType ORDER BY idVehicleType");
 			while (result.next()) {
 				VehicleType type = new VehicleType(result.getString("vehicleName"));
 				lst_vehicleType.add(type);
@@ -101,7 +108,7 @@ public class VehicleTypeDAO extends DAO<VehicleType> {
 	}
 
 	@Override
-	public ArrayList<VehicleType> getAll(int i) {
+	public ArrayList<VehicleType> findAll(int i) {
 		return null;
 	}
 

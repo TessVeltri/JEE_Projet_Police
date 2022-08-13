@@ -72,12 +72,12 @@ public class Infraction {
 		return infractionDAO.find(i);
 	}
 	
-	public ArrayList<Infraction> getAll (){
-		return infractionDAO.getAll();
+	public ArrayList<Infraction> findAll (){
+		return infractionDAO.findAll();
 	}
 	
-	public ArrayList<Infraction> getAll (int i){
-		return infractionDAO.getAll(i);
+	public ArrayList<Infraction> findAll (int i){
+		return infractionDAO.findAll(i);
 	}
 	
 }

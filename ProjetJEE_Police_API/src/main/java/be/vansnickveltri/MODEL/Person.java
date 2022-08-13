@@ -71,8 +71,8 @@ public abstract class Person {
 		return personDAO.find(i);
 	}
 	
-	public ArrayList<Person> getAll (){
-		return personDAO.getAll();
+	public ArrayList<Person> findAll (){
+		return personDAO.findAll();
 	}
 	
 }

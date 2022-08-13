@@ -62,8 +62,8 @@ public class InfractionType {
 		return infractionTypeDAO.find(i);
 	}
 	
-	public ArrayList<InfractionType> getAll(int i){
-		return infractionTypeDAO.getAll(i);
+	public ArrayList<InfractionType> findAll(int i){
+		return infractionTypeDAO.findAll(i);
 	}
 	
 	

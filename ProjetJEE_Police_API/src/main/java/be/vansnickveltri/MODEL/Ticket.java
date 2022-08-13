@@ -1,6 +1,5 @@
 package be.vansnickveltri.MODEL;
 
-import java.sql.Time;
 import java.util.ArrayList;
 
 import be.vansnickveltri.DAO.AbstractDAOFactory;
@@ -12,7 +11,7 @@ public class Ticket {
 	
 	// Parameters
 	private Date date;
-	private Time hour;
+	private String hour;
 	private double totalAmount;
 	private boolean validate;
 	private boolean payed;
@@ -28,7 +27,7 @@ public class Ticket {
 	public Ticket () {}
 	
 	// Constructor
-	public Ticket(Date date, Time hour, double totalAmount, boolean validate, boolean payed, Policeman policeman, Vehicle vehicle) {
+	public Ticket(Date date, String hour, double totalAmount, boolean validate, boolean payed, Policeman policeman, Vehicle vehicle) {
 		this.date = date;
 		this.hour = hour;
 		this.totalAmount = totalAmount;
@@ -48,16 +47,24 @@ public class Ticket {
 		this.date = date;
 	}
 
-	public Time getHour() {
+	public String getHour() {
 		return hour;
 	}
 
-	public void setHour(Time hour) {
+	public void setHour(String hour) {
 		this.hour = hour;
 	}
 
-	public double getTotalAmount() {
+	public double findTotalAmount() {
+		this.initLstInfcations();
+		this.calculate();
 		return totalAmount;
+	}
+	
+	public void initLstInfcations () {
+		ArrayList<Infraction> lst_infractions = new ArrayList<Infraction>();
+		lst_infractions = new Infraction().findAll(this.findId());
+		this.setLst_infraction(lst_infractions);
 	}
 
 	public void setTotalAmount(double totalAmount) {
@@ -96,6 +103,11 @@ public class Ticket {
 		this.vehicle = vehicle;
 	}
 
+	public ArrayList<Infraction> findLst_infraction() {
+		this.findTotalAmount();
+		return lst_infraction;
+	}
+	
 	public ArrayList<Infraction> getLst_infraction() {
 		return lst_infraction;
 	}
@@ -105,13 +117,17 @@ public class Ticket {
 	}
 
 	// Methods
-	public void calculate () {
+	private void calculate () {
 		double total = 0;
 		
-		for(Infraction infractions : this.getLst_infraction())
+		if(this.getLst_infraction() != null)
 		{
-			total += infractions.getInfractionType().getInfractionPrice();
+			for(Infraction infractions : this.getLst_infraction())
+			{
+				total += infractions.getInfractionType().getInfractionPrice();
+			}
 		}
+		
 		setTotalAmount(total);
 	}
 	
@@ -135,12 +151,12 @@ public class Ticket {
 		return ticketDAO.find(i);
 	}
 	
-	public ArrayList<Ticket> getAll(){
-		return ticketDAO.getAll();
+	public ArrayList<Ticket> findAll(){
+		return ticketDAO.findAll();
 	}
 	
-	public ArrayList<Ticket> getAll (int i){
-		return ticketDAO.getAll(i);
+	public ArrayList<Ticket> findAll (int i){
+		return ticketDAO.findAll(i);
 	}
 
 }

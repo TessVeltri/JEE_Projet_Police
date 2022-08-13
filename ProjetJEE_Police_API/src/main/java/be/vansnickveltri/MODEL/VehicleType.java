@@ -48,8 +48,8 @@ public class VehicleType {
 		return vehicleTypeDAO.find(i);
 	}
 	
-	public ArrayList<VehicleType> getAll (){
-		return vehicleTypeDAO.getAll();
+	public ArrayList<VehicleType> findAll (){
+		return vehicleTypeDAO.findAll();
 	}
 	
 }

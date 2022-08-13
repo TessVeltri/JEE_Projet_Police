@@ -94,7 +94,7 @@ public class Vehicle {
 		return vehicleDAO.find(i);
 	}
 	
-	public ArrayList<Vehicle> getAll (){
-		return vehicleDAO.getAll();
+	public ArrayList<Vehicle> findAll (){
+		return vehicleDAO.findAll();
 	}
 }

@@ -77,8 +77,8 @@ public abstract class User extends Person{
 		return userDAO.find(i);
 	}
 	
-	public ArrayList<User> getAllUser(){
-		return userDAO.getAll();
+	public ArrayList<User> findAllUser(){
+		return userDAO.findAll();
 	}
 	
 }

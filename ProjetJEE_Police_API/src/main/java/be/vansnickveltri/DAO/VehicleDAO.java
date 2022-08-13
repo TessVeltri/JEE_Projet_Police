@@ -24,16 +24,23 @@ public class VehicleDAO extends DAO<Vehicle>{
 		else 
 			insurance = "N";
 		try {
-            this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-            .executeUpdate(
-                    "INSERT INTO JEE_Vehicle (plateNumberVehicle, isInsurance, idCivil, idVehicleType)"
-                    + "Values('"
-                        + obj.getPlateNumberVehicle() + "','"
-                        + insurance + "','"
-                        + obj.getCivil().findId() + "','"
-                        + obj.getVehicleType().findId()
-                        + "')");
-            return true;
+			Vehicle v = null;
+			v = v.find(obj.findId());
+			if (v == null) {
+				this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+	            .executeUpdate(
+	                    "INSERT INTO JEE_Vehicle (plateNumberVehicle, isInsurance, idCivil, idVehicleType) "
+	                    + "Values('"
+	                        + obj.getPlateNumberVehicle() + "','"
+	                        + insurance + "','"
+	                        + obj.getCivil().findId() + "','"
+	                        + obj.getVehicleType().findId()
+	                        + "')");
+	            return true;
+			} else {
+				return false;
+			}
+            
         }
         catch(SQLException e) {
             e.printStackTrace();
@@ -103,7 +110,7 @@ public class VehicleDAO extends DAO<Vehicle>{
 		try {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
-							"SELECT plateNumberVehicle, isInsurance, idCivil, idVehicleType FROM JEE_Vehicle WHERE idVehicle = '" + i + "'");
+							"SELECT plateNumberVehicle, isInsurance, idCivil, idVehicleType FROM JEE_Vehicle WHERE idVehicle = " + i );
 			if (result.first()) {
 				if (result.getString("isInsurance").equals("Y"))
 					insurance = true;
@@ -122,7 +129,7 @@ public class VehicleDAO extends DAO<Vehicle>{
 	}
 
 	@Override
-	public ArrayList<Vehicle> getAll() {
+	public ArrayList<Vehicle> findAll() {
 		ArrayList<Vehicle> lst_vehicle = new ArrayList<>();
 		boolean insurance;
 		Person civil = new Civil();
@@ -130,7 +137,7 @@ public class VehicleDAO extends DAO<Vehicle>{
 		try {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
-							"SELECT plateNumberVehicle, isInsurance, idCivil, idVehicleType FROM JEE_Vehicle ORDER BY idVehicle'");
+							"SELECT plateNumberVehicle, isInsurance, idCivil, idVehicleType FROM JEE_Vehicle ORDER BY idVehicle");
 			while (result.next()) {
 				if (result.getString("isInsurance").equals("Y"))
 					insurance = true;
@@ -149,7 +156,7 @@ public class VehicleDAO extends DAO<Vehicle>{
 	}
 
 	@Override
-	public ArrayList<Vehicle> getAll(int i) {
+	public ArrayList<Vehicle> findAll(int i) {
 		ArrayList<Vehicle> lst_vehicle = new ArrayList<>();
 		boolean insurance;
 		Person civil = new Civil();
@@ -158,7 +165,7 @@ public class VehicleDAO extends DAO<Vehicle>{
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
 							"SELECT plateNumberVehicle, isInsurance, idCivil, idVehicleType FROM JEE_Vehicle "
-							+ "WHERE idCivil = '" + i + "' ORDER BY idVehicle'");
+							+ "WHERE idCivil = " + i + " ORDER BY idVehicle");
 			while (result.next()) {
 				if (result.getString("isInsurance").equals("Y"))
 					insurance = true;

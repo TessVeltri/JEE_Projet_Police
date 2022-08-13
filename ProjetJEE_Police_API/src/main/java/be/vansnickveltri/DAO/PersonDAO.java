@@ -17,11 +17,18 @@ public class PersonDAO extends DAO<Person> {
 	@Override
 	public boolean create(Person obj) {
 		try {
-			this.connect.createStatement()
+			Person p = null;
+			p = p.find(obj.findId());
+			if (p == null) {
+				this.connect.createStatement()
 					.executeUpdate("INSERT INTO JEE_Civil(name, firstname, email) " 
 							+ "Values('" + obj.getName() + "', '" + obj.getFirstname() + "', '" + obj.getEmail()
 							+ "')");
-			return true;
+				return true;
+			} else {
+				return false;
+			}
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -82,7 +89,7 @@ public class PersonDAO extends DAO<Person> {
 		try {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeQuery("SELECT name, firstname, email FROM JEE_Civil WHERE idCivil = '" + i + "'");
+					.executeQuery("SELECT name, firstname, email FROM JEE_Civil WHERE idCivil = " + i );
 			if (result.first()) {
 				person = new Civil (result.getString("name"), result.getString("firstname"), result.getString("email"));
 			}
@@ -94,12 +101,12 @@ public class PersonDAO extends DAO<Person> {
 	}
 
 	@Override
-	public ArrayList<Person> getAll() {
+	public ArrayList<Person> findAll() {
 		ArrayList<Person> lst_persons = new ArrayList<>();
 		try {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
-							"SELECT name, firstname, email FROM JEE_Civil ORDER BY idCivil'");
+							"SELECT name, firstname, email FROM JEE_Civil ORDER BY idCivil");
 			while (result.next()) {
 				Person person = new Civil(result.getString("name"), result.getString("firstname"), result.getString("email"));
 				lst_persons.add(person);
@@ -112,7 +119,7 @@ public class PersonDAO extends DAO<Person> {
 	}
 
 	@Override
-	public ArrayList<Person> getAll(int i) {
+	public ArrayList<Person> findAll(int i) {
 		return null;
 	}
 
