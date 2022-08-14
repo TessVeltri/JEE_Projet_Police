@@ -94,7 +94,7 @@ public class UserDAO extends DAO<User> {
 							+ "FROM JEE_User WHERE matricule = '" + matricule + "' AND password = '" + password + "'");
 			if (result.first())
 				switch (result.getString("typeUser")) {
-				case "HeadOfBrigade":
+				case "Head of brigade":
 					user = new HeadOfBrigade(result.getString("name"), result.getString("firstname"),
 							result.getString("email"), matricule, password, result.getString("typeUser"));
 					break;
@@ -107,7 +107,7 @@ public class UserDAO extends DAO<User> {
 					user = new Admin(result.getString("name"), result.getString("firstname"),
 							result.getString("email"), matricule, password, result.getString("typeUser"));
 					break;
-				case "FineCollector":
+				case "Fine collector":
 					user = new FineCollector(result.getString("name"), result.getString("firstname"),
 							result.getString("email"), matricule, password, result.getString("typeUser"));
 				}

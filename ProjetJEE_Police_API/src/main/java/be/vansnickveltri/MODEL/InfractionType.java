@@ -58,6 +58,10 @@ public class InfractionType {
 		return infractionTypeDAO.findId(this);
 	}
 	
+	public InfractionType find (String str1, String str2) {
+		return infractionTypeDAO.find(str1, str2);
+	}
+	
 	public InfractionType find (int i) {
 		return infractionTypeDAO.find(i);
 	}

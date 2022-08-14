@@ -96,7 +96,7 @@ public class InfractionTypeAPI {
 	}
 	
 	@POST
-	@Path("/find")
+	@Path("/findid")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response findId(@FormParam("infractionName") String infractionName,
 			@FormParam("infractionPrice") double infractionPrice) {
@@ -108,6 +108,23 @@ public class InfractionTypeAPI {
 
 		if (id > 0)
 			response = Response.status(Response.Status.OK).entity(id).build();
+		else
+			response = Response.status(Response.Status.BAD_REQUEST).entity(false).build();
+
+		return response;
+	}
+	
+	@POST
+	@Path("/find")
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response find(@FormParam("infractionName") String infractionName) {
+
+		conn = DBConnection.getInstance();
+
+		InfractionType inf = new InfractionTypeDAO(conn).find(infractionName, "");
+
+		if (inf != null)
+			response = Response.status(Response.Status.OK).entity(inf).build();
 		else
 			response = Response.status(Response.Status.BAD_REQUEST).entity(false).build();
 

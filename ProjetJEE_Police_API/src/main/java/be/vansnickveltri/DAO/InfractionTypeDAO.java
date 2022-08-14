@@ -82,7 +82,19 @@ public class InfractionTypeDAO extends DAO<InfractionType>{
 
 	@Override
 	public InfractionType find(String str1, String str2) {
-		return null;
+		InfractionType type = null;
+		try {
+			ResultSet result = this.connect
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeQuery("SELECT infractionName, infractionPrice FROM JEE_InfractionType WHERE infractionName = '" + str1 + "'");
+			if (result.first()) {
+				type = new InfractionType (result.getString("infractionName"), result.getDouble("infractionPrice"));
+			}
+			return type;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	@Override
