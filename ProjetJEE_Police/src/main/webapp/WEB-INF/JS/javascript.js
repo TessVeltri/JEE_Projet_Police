@@ -10,3 +10,8 @@ function toggleForm (){
     form.style.display = "none";
   }
 }
+
+function closeCheck(){
+	alert ("Your ticket has been sent");
+	window.location.replace("/ProjetJEE_Police/login");
+}

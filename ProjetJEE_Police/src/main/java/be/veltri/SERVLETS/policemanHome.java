@@ -93,7 +93,6 @@ public class policemanHome extends HttpServlet {
 		try {
 			date = new Date(formatter.parse(str_date).getTime());
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -111,17 +110,26 @@ public class policemanHome extends HttpServlet {
 			Vehicle vehicle = new Vehicle(plateNumber,false,null,null);
 			Ticket ticket = new Ticket(date,hour,0,false,false,policeman,vehicle);
 			boolean ticketCreate = ticket.create(ticket);
+			boolean infractionCreate= false;
 			
 			for(Infraction infraction : infractions)
 			{
 				infraction.setTicket(ticket);
-				boolean create = Infraction.create(infraction);
+				infractionCreate = Infraction.create(infraction);
+			}
+			if (ticketCreate && infractionCreate) {
+				session.setAttribute("plateNumber", plateNumber);
+				session.setAttribute("date", date);
+				session.setAttribute("hour", hour);
+				session.setAttribute("name", name);
+				session.setAttribute("firstname", firstname);
+				session.setAttribute("email", email);
+				session.setAttribute("vehicleType", vehicleType);
+				response.sendRedirect(request.getContextPath() + "/checkTicket");
 			}
 		
 		}
 		
-		
-		doGet(request, response);
 	}
 
 }

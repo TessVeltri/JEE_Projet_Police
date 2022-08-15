@@ -4,8 +4,11 @@ import java.util.ArrayList;
 
 import javax.ws.rs.core.MediaType;
 
+import org.json.JSONObject;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sun.jersey.api.client.ClientResponse;
 
 import be.veltri.JAVABEANS.Admin;
 import be.veltri.JAVABEANS.FineCollector;
@@ -44,28 +47,30 @@ public class UserDAO extends DAO<User> {
 		try {
 			User user = null;
 			
-			String responseJSON = resource.path("user")
+			String res = resource.path("user")
 					.path(matricule)
 					.path(password)
 					.accept(MediaType.APPLICATION_JSON)
 					.get(String.class);
 			
-			final ObjectMapper objectMapper = new ObjectMapper();
-			JsonNode jsonNode = objectMapper.readValue(responseJSON, JsonNode.class);
-			String typeUser = jsonNode.get("typeUser").textValue();
+			String responseJSON = res.toString();
 			
+			final ObjectMapper objectMapper = new ObjectMapper();
+			JsonNode jsonNode = objectMapper.readValue(responseJSON.toString(), JsonNode.class);
+			String typeUser = jsonNode.get("typeUser").textValue();
+						
 			switch (typeUser) {
 				case "Admin":
-					user = mapper.readValue(responseJSON, Admin.class);
+					user = mapper.readValue(responseJSON.toString(), Admin.class);
 					break;
 				case "Head of brigade":
-					user = mapper.readValue(responseJSON, HeadOfBrigade.class);
+					user = mapper.readValue(responseJSON.toString(), HeadOfBrigade.class);
 					break;
 				case "Fine collector":
-					user = mapper.readValue(responseJSON, FineCollector.class);
+					user = mapper.readValue(responseJSON.toString(), FineCollector.class);
 					break;
 				case "Policeman":
-					user = mapper.readValue(responseJSON, Policeman.class);
+					user = mapper.readValue(responseJSON.toString(), Policeman.class);
 					break;
 			}
 			return user;

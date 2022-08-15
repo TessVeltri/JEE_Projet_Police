@@ -20,12 +20,10 @@ public class InfractionTypeDAO extends DAO<InfractionType>{
 			it = it.find(obj.findId());
 			if(it == null) {
 				this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-	            .executeUpdate(
-	                    "INSERT INTO JEE_InfractionType (infractionName, infractionPrice)"
-	                    + " Values('"
+	            .executeQuery(
+	                    "CALL JEE_INSERT_INFRACTIONTYPE ('"
 	                        + obj.getInfractionName() + "',"
-	                        + obj.getInfractionPrice()
-	                        + ")");
+	                        + obj.getInfractionPrice() + ")");
 	            return true;
 			} else {
 				return false;
@@ -42,7 +40,7 @@ public class InfractionTypeDAO extends DAO<InfractionType>{
 	public boolean delete(InfractionType obj) {
 		try {
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeUpdate("DELETE FROM JEE_InfractionType WHERE idInfractionType = '" + obj.findId() + "'");
+					.executeQuery("CALL JEE_DELETE_INFRACTIONTYPE('" + obj.findId() + "')");
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -54,8 +52,7 @@ public class InfractionTypeDAO extends DAO<InfractionType>{
 	public boolean update(InfractionType obj) {
 		try {
 			this.connect.createStatement()
-				.executeUpdate("UPDATE JEE_InfractionType SET infractionPrice = " + obj.getInfractionPrice() 
-				+ " WHERE infractionName = '" + obj.getInfractionName() + "'");
+				.executeUpdate("CALL JEE_UPDATE_INFRACTIONTYPE (" + obj.getInfractionPrice() + ",'" + obj.getInfractionName() + "')");
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();

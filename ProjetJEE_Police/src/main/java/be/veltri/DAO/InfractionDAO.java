@@ -18,12 +18,12 @@ public class InfractionDAO extends DAO <Infraction>{
 		paramsPost.add("idTicket", String.valueOf(obj.getTicket().findId()));
 		paramsPost.add("idInfractionType", String.valueOf(obj.getInfractionType().findId()));
 		
-		ClientResponse res = resource.path("ticket").post(ClientResponse.class, paramsPost);
+		ClientResponse res = resource.path("infraction").post(ClientResponse.class, paramsPost);
 		String bit = res.getEntity(String.class);
 	
 		int httpResponseCode = res.getStatus();
 		
-		if(httpResponseCode == 200)
+		if(httpResponseCode == 201)
 			return true;
 		else
 			return false;

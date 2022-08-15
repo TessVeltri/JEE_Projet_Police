@@ -20,15 +20,14 @@ public class PolicemanDAO extends DAO<Policeman> {
 			Policeman p = new Policeman();
 			p = p.find(obj.getMatricule(), obj.getPassword());
 			if (p == null) {
-				this.connect.createStatement().executeUpdate(
-						"INSERT INTO JEE_User(name, firstname, email, matricule, password, typeUser, idHeadOfBrigade) "
-								+ "Values('" + obj.getName() + "', '" + obj.getFirstname() + "', '" + obj.getEmail()
-								+ "','" + obj.getMatricule() + "', '" + obj.getPassword() + "', '" + obj.getTypeUser()
-								+ "','" + obj.getHeadOfBrigade().findId() + "')");
+				this.connect.createStatement()
+						.executeUpdate("CALL JEE_INSERT_USER ('" + obj.getName() + "', '" + obj.getFirstname() + "', '"
+								+ obj.getMatricule() + "','" + obj.getPassword() + "', '" + obj.getTypeUser() + "', '"
+								+ obj.getHeadOfBrigade().findId() + "','" + obj.getEmail() + "')");
 				return true;
 			} else {
 				return false;
-			}			
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -65,17 +64,18 @@ public class PolicemanDAO extends DAO<Policeman> {
 
 	@Override
 	public Policeman find(String matricule, String password) {
-		Policeman policeman = new Policeman();
+		Policeman policeman = null;
 		HeadOfBrigade head = new HeadOfBrigade();
 		try {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery("SELECT name, firstname, email, matricule, password, typeUser, idHeadOfBrigade "
 							+ "FROM JEE_User WHERE matricule = '" + matricule + "' AND password = '" + password + "'");
-			if (result.first())
+			if (result.first()) {
 				head = head.find(result.getInt("idHeadOfBrigade"));
-			policeman = new Policeman(result.getString("name"), result.getString("firstname"),
-					result.getString("email"), matricule, password, result.getString("typeUser"), head);
+				policeman = new Policeman(result.getString("name"), result.getString("firstname"),
+						result.getString("email"), matricule, password, result.getString("typeUser"), head);
+			}
 			return policeman;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -91,7 +91,7 @@ public class PolicemanDAO extends DAO<Policeman> {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery("SELECT name, firstname, email, matricule, password, typeUser, idHeadOfBrigade "
-							+ "FROM JEE_User WHERE idUser = " + i );
+							+ "FROM JEE_User WHERE idUser = " + i);
 			if (result.first())
 				head = head.find(result.getInt("idHeadOfBrigade"));
 			policeman = new Policeman(result.getString("name"), result.getString("firstname"),
@@ -137,7 +137,7 @@ public class PolicemanDAO extends DAO<Policeman> {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
 							"SELECT name, firstname, email, matricule, password, typeUser, idHeadOfBrigade FROM JEE_User "
-									+ "WHERE idHeadOfBrigade = " + i );
+									+ "WHERE idHeadOfBrigade = " + i);
 			while (result.next()) {
 				Policeman policeman = new Policeman(result.getString("name"), result.getString("firstname"),
 						result.getString("email"), result.getString("matricule"), result.getString("password"),

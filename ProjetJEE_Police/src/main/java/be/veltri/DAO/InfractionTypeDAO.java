@@ -37,25 +37,21 @@ public class InfractionTypeDAO extends DAO<InfractionType>{
 		MultivaluedMap<String, String> paramsPost = new MultivaluedMapImpl();
 		paramsPost.add("infractionName", String.valueOf(obj.getInfractionName()));
 		
-		ClientResponse res = resource.path("infractionType/find").post(ClientResponse.class, paramsPost);
-		String id = res.getEntity(String.class);
+		String res = resource.path("infractionType/findid").post(String.class, paramsPost);
+		int id = Integer.parseInt(res);
 		
-		int httpResponseCode = res.getStatus();
-		
-		if(httpResponseCode == 200)
-			return Integer.parseInt(id);
-		else
-			return 0;
+		return id;
 	}
 
 	@Override
 	public InfractionType find(String str1, String str2) {
 		try {
 			InfractionType inf = null;
-			String responseJSON = resource.path("infractionType/find")
-					.path(str1)
-					.accept(MediaType.APPLICATION_JSON)
-					.get(String.class);
+			
+			MultivaluedMap<String, String> paramsPost = new MultivaluedMapImpl();
+			paramsPost.add("infractionName", str1);
+			
+			String responseJSON = resource.path("infractionType/find").post(String.class, paramsPost);
 			
 			inf = mapper.readValue(responseJSON, InfractionType.class);
 			

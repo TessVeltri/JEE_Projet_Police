@@ -1,7 +1,10 @@
 package be.vansnickveltri.DAO;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.sql.ResultSet;
 
@@ -21,9 +24,10 @@ public class InfractionDAO extends DAO<Infraction> {
 			Infraction i = new Infraction();
 			i = i.find(obj.findId());
 			if (i == null) {
-				this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeUpdate("INSERT INTO JEE_Infraction (infractionComment, idTicket, idInfractiontType) "
-							+ "Values('" + obj.getComment() + "','" + obj.getTicket().findId() + "','"
+				
+				   this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeQuery("CALL JEE_INSERT_INFRACTION ('" + obj.getComment() + "','" 
+							+ obj.getTicket().findId() + "','"
 							+ obj.getInfractionType().findId() + "')");
 				return true;
 			} else {
@@ -39,7 +43,7 @@ public class InfractionDAO extends DAO<Infraction> {
 	public boolean delete(Infraction obj) {
 		try {
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeUpdate("DELETE FROM JEE_Infraction WHERE idInfraction = '" + obj.findId() + "'");
+					.executeQuery("CALL JEE_DELETE_INFRACTION ('" + obj.findId() + "')");
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -50,8 +54,8 @@ public class InfractionDAO extends DAO<Infraction> {
 	@Override
 	public boolean update(Infraction obj) {
 		try {
-			this.connect.createStatement().executeUpdate("UPDATE JEE_Infraction SET infractionComment = '"
-					+ obj.getComment() + "' WHERE idInfraction = '" + obj.findId() + "'");
+			this.connect.createStatement()
+			.executeUpdate("CALL JEE_UPDATE_INFRACTION ('" + obj.getComment() + "', '" + obj.findId() +"')");
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -20,19 +20,18 @@ public class UserDAO extends DAO<User> {
 	@Override
 	public boolean create(User obj) {
 		try {
-			User u = null;
+			User u = new Admin();
 			u = u.find(obj.getMatricule(), obj.getPassword());
 			if (u == null) {
-				this.connect.createStatement().executeUpdate(
-					"INSERT INTO JEE_User(name, firstname, matricule, password, typeUser, email ,  idHeadOfBrigade) "
-							+ "Values('" + obj.getName() + "', '" + obj.getFirstname() + "', '" + obj.getMatricule()
-							+ "', '" + obj.getPassword() + "', '" + obj.getTypeUser() + "', '" + obj.getEmail()
-							+ "', NULL)");
+				this.connect.createStatement()
+						.executeUpdate("CALL JEE_INSERT_USER ('" + obj.getName() + "', '" + obj.getFirstname() + "', '"
+								+ obj.getMatricule() + "','" + obj.getPassword() + "', '" + obj.getTypeUser()
+								+ "', NULL,'" + obj.getEmail() + "')");
 				return true;
 			} else {
 				return false;
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -43,7 +42,7 @@ public class UserDAO extends DAO<User> {
 	public boolean delete(User obj) {
 		try {
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeUpdate("DELETE FROM JEE_User WHERE idUser = '" + obj.findId() + "'");
+					.executeQuery("CALL JEE_DELETE_USER ('" + obj.findId() + "')");
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -55,9 +54,8 @@ public class UserDAO extends DAO<User> {
 	public boolean update(User obj) {
 		try {
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeUpdate("UPDATE JEE_User " + "SET name = '" + obj.getName() + "', firstname = '"
-							+ obj.getFirstname() + "', email = '" + obj.getEmail() + "', typeUser = '"
-							+ obj.getTypeUser() + "'WHERE idUser = '" + obj.findId() + "'");
+					.executeQuery("CALL JEE_UPDATE_USER('" + obj.getName() + "', '" + obj.getFirstname() + "' , '"
+							+ obj.getEmail() + "', '" + obj.getTypeUser() + "' , '" + obj.findId() + "')");
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -104,8 +102,8 @@ public class UserDAO extends DAO<User> {
 							result.getString("email"), matricule, password, result.getString("typeUser"), head);
 					break;
 				case "Admin":
-					user = new Admin(result.getString("name"), result.getString("firstname"),
-							result.getString("email"), matricule, password, result.getString("typeUser"));
+					user = new Admin(result.getString("name"), result.getString("firstname"), result.getString("email"),
+							matricule, password, result.getString("typeUser"));
 					break;
 				case "Fine collector":
 					user = new FineCollector(result.getString("name"), result.getString("firstname"),
@@ -125,7 +123,7 @@ public class UserDAO extends DAO<User> {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
 					.executeQuery("SELECT name, firstname, email, matricule, password, typeUser "
-							+ "FROM JEE_User WHERE idUser = " + i );
+							+ "FROM JEE_User WHERE idUser = " + i);
 			if (result.first()) {
 				if (result.getString("typeUser").equals("Head of brigade")) {
 					user = new HeadOfBrigade(result.getString("name"), result.getString("firstname"),
@@ -157,7 +155,7 @@ public class UserDAO extends DAO<User> {
 							"SELECT name, firstname, email, matricule, password, typeUser, idHeadOfBrigade FROM JEE_User ORDER BY idUser");
 			while (result.next()) {
 				User user = null;
-				
+
 				if (result.getString("typeUser").equals("Head of brigade")) {
 					user = new HeadOfBrigade(result.getString("name"), result.getString("firstname"),
 							result.getString("email"), result.getString("matricule"), result.getString("password"),
@@ -173,9 +171,8 @@ public class UserDAO extends DAO<User> {
 							result.getString("email"), result.getString("matricule"), result.getString("password"),
 							result.getString("typeUser"));
 				} else if (result.getString("typeUser").equals("Admin")) {
-					user = new Admin(result.getString("name"), result.getString("firstname"),
-							result.getString("email"), result.getString("matricule"), result.getString("password"),
-							result.getString("typeUser"));
+					user = new Admin(result.getString("name"), result.getString("firstname"), result.getString("email"),
+							result.getString("matricule"), result.getString("password"), result.getString("typeUser"));
 				}
 				lst_users.add(user);
 			}

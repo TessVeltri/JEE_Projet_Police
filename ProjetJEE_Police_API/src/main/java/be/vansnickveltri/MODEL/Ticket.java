@@ -54,17 +54,11 @@ public class Ticket {
 	public void setHour(String hour) {
 		this.hour = hour;
 	}
-
+	
 	public double findTotalAmount() {
 		this.initLstInfcations();
 		this.calculate();
 		return totalAmount;
-	}
-	
-	public void initLstInfcations () {
-		ArrayList<Infraction> lst_infractions = new ArrayList<Infraction>();
-		lst_infractions = new Infraction().findAll(this.findId());
-		this.setLst_infraction(lst_infractions);
 	}
 
 	public void setTotalAmount(double totalAmount) {
@@ -116,7 +110,12 @@ public class Ticket {
 		this.lst_infraction = lst_infraction;
 	}
 
-	// Methods
+	// Methods	
+	public void initLstInfcations () {
+		ArrayList<Infraction> lst_infractions = new ArrayList<Infraction>();
+		lst_infractions = new Infraction().findAll(this.findId());
+		this.setLst_infraction(lst_infractions);
+	}
 	private void calculate () {
 		double total = 0;
 		

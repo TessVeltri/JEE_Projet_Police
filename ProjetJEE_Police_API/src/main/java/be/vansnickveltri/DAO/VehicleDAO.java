@@ -10,7 +10,7 @@ import be.vansnickveltri.MODEL.Person;
 import be.vansnickveltri.MODEL.Vehicle;
 import be.vansnickveltri.MODEL.VehicleType;
 
-public class VehicleDAO extends DAO<Vehicle>{
+public class VehicleDAO extends DAO<Vehicle> {
 
 	public VehicleDAO(Connection conn) {
 		super(conn);
@@ -19,40 +19,33 @@ public class VehicleDAO extends DAO<Vehicle>{
 	@Override
 	public boolean create(Vehicle obj) {
 		String insurance;
-		if (obj.isInsurance()) 
+		if (obj.isInsurance())
 			insurance = "Y";
-		else 
+		else
 			insurance = "N";
 		try {
-			Vehicle v = null;
+			Vehicle v = new Vehicle();
 			v = v.find(obj.findId());
 			if (v == null) {
 				this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-	            .executeUpdate(
-	                    "INSERT INTO JEE_Vehicle (plateNumberVehicle, isInsurance, idCivil, idVehicleType) "
-	                    + "Values('"
-	                        + obj.getPlateNumberVehicle() + "','"
-	                        + insurance + "','"
-	                        + obj.getCivil().findId() + "','"
-	                        + obj.getVehicleType().findId()
-	                        + "')");
-	            return true;
+						.executeQuery("CALL JEE_INSERT_VEHICLE ('" + obj.getPlateNumberVehicle() + "','" + insurance
+								+ "','" + obj.getCivil().findId() + "','" + obj.getVehicleType().findId() + "')");
+				return true;
 			} else {
 				return false;
 			}
-            
-        }
-        catch(SQLException e) {
-            e.printStackTrace();
-            return false;
-        }
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	@Override
 	public boolean delete(Vehicle obj) {
 		try {
-			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeUpdate("DELETE FROM JEE_Vehicle WHERE plateNumberVehicle = '" + obj.getPlateNumberVehicle() + "'");
+			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
+					"CALL JEE_DELETE_VEHICLE ('" + obj.getPlateNumberVehicle() + "')");
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -64,14 +57,13 @@ public class VehicleDAO extends DAO<Vehicle>{
 	@Override
 	public boolean update(Vehicle obj) {
 		String insurance;
-		if (obj.isInsurance()) 
+		if (obj.isInsurance())
 			insurance = "Y";
-		else 
+		else
 			insurance = "N";
 		try {
-			this.connect.createStatement()
-				.executeUpdate("UPDATE JEE_Vehicle SET isInsurance = '" + insurance 
-				+ "' WHERE plateNumberVehicle = '" + obj.getPlateNumberVehicle() + "'");
+			this.connect.createStatement().executeQuery("CALL JEE_UPDATE_VEHICLE ('" + insurance
+					+ "' , '" + obj.getPlateNumberVehicle() + "')");
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -84,8 +76,9 @@ public class VehicleDAO extends DAO<Vehicle>{
 		int id = 0;
 		try {
 			ResultSet result = this.connect
-					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
-							"SELECT idVehicle FROM JEE_Vehicle WHERE plateNumberVehicle = '" + obj.getPlateNumberVehicle() + "'");
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeQuery("SELECT idVehicle FROM JEE_Vehicle WHERE plateNumberVehicle = '"
+							+ obj.getPlateNumberVehicle() + "'");
 			if (result.first()) {
 				id = result.getInt(1);
 			}
@@ -110,7 +103,8 @@ public class VehicleDAO extends DAO<Vehicle>{
 		try {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
-							"SELECT plateNumberVehicle, isInsurance, idCivil, idVehicleType FROM JEE_Vehicle WHERE idVehicle = " + i );
+							"SELECT plateNumberVehicle, isInsurance, idCivil, idVehicleType FROM JEE_Vehicle WHERE idVehicle = "
+									+ i);
 			if (result.first()) {
 				if (result.getString("isInsurance").equals("Y"))
 					insurance = true;
@@ -118,10 +112,10 @@ public class VehicleDAO extends DAO<Vehicle>{
 					insurance = false;
 				civil = civil.find(result.getInt("idCivil"));
 				type = type.find(result.getInt("idVehicleType"));
-				vehicle = new Vehicle(result.getString("plateNumberVehicle"), insurance, (Civil)civil, type);
+				vehicle = new Vehicle(result.getString("plateNumberVehicle"), insurance, (Civil) civil, type);
 			}
 			return vehicle;
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
@@ -145,7 +139,7 @@ public class VehicleDAO extends DAO<Vehicle>{
 					insurance = false;
 				civil = civil.find(result.getInt("idCivil"));
 				type = type.find(result.getInt("idVehicleType"));
-				Vehicle vehicle = new Vehicle(result.getString("plateNumberVehicle"), insurance, (Civil)civil, type);
+				Vehicle vehicle = new Vehicle(result.getString("plateNumberVehicle"), insurance, (Civil) civil, type);
 				lst_vehicle.add(vehicle);
 			}
 			return lst_vehicle;
@@ -163,8 +157,8 @@ public class VehicleDAO extends DAO<Vehicle>{
 		VehicleType type = new VehicleType();
 		try {
 			ResultSet result = this.connect
-					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
-							"SELECT plateNumberVehicle, isInsurance, idCivil, idVehicleType FROM JEE_Vehicle "
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeQuery("SELECT plateNumberVehicle, isInsurance, idCivil, idVehicleType FROM JEE_Vehicle "
 							+ "WHERE idCivil = " + i + " ORDER BY idVehicle");
 			while (result.next()) {
 				if (result.getString("isInsurance").equals("Y"))
@@ -173,7 +167,7 @@ public class VehicleDAO extends DAO<Vehicle>{
 					insurance = false;
 				civil = civil.find(i);
 				type = type.find(result.getInt("idVehicleType"));
-				Vehicle vehicle = new Vehicle(result.getString("plateNumberVehicle"), insurance, (Civil)civil, type);
+				Vehicle vehicle = new Vehicle(result.getString("plateNumberVehicle"), insurance, (Civil) civil, type);
 				lst_vehicle.add(vehicle);
 			}
 			return lst_vehicle;

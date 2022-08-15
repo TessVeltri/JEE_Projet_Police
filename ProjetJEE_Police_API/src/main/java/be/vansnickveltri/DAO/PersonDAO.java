@@ -17,13 +17,14 @@ public class PersonDAO extends DAO<Person> {
 	@Override
 	public boolean create(Person obj) {
 		try {
-			Person p = null;
+			Person p = new Civil();
 			p = p.find(obj.findId());
 			if (p == null) {
 				this.connect.createStatement()
-					.executeUpdate("INSERT INTO JEE_Civil(name, firstname, email) " 
-							+ "Values('" + obj.getName() + "', '" + obj.getFirstname() + "', '" + obj.getEmail()
-							+ "')");
+					.executeQuery("CALL JEE_INSERT_CIVIL ('" 
+							+ obj.getName() + 
+							"', '" + obj.getFirstname() + 
+							"', '" + obj.getEmail() + "')");
 				return true;
 			} else {
 				return false;
@@ -39,7 +40,7 @@ public class PersonDAO extends DAO<Person> {
 	public boolean delete(Person obj) {
 		try {
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeUpdate("DELETE FROM JEE_Civil WHERE idCivil = '" + obj.findId() + "'");
+					.executeUpdate("CALL JEE_DELETE_CIVIL ('" + obj.findId() + "')");
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -51,8 +52,7 @@ public class PersonDAO extends DAO<Person> {
 	public boolean update(Person obj) {
 		try {
 			this.connect.createStatement()
-				.executeUpdate("UPDATE JEE_Civil SET email = '" + obj.getEmail() 
-				+ "' WHERE name = '" + obj.getName() + "' AND firstname = '" + obj.getFirstname() + "'");
+				.executeQuery("CALL JEE_UPDATE_CIVIL ('" + obj.getName() + "' , '" + obj.getFirstname() + "', '" + obj.getEmail() + "')");
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -64,6 +64,7 @@
 		</div>
 	</form>
 		<div class="div-center grid-child">
+			<p style="color:red">Complete the infractions list first !</p>
 			<h3>Infraction</h3>
 			<%
 				if (lstInfraction != null) {

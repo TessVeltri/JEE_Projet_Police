@@ -16,17 +16,16 @@ public class VehicleTypeDAO extends DAO<VehicleType> {
 	@Override
 	public boolean create(VehicleType obj) {
 		try {
-			VehicleType vt = null;
+			VehicleType vt = new VehicleType();
 			vt = vt.find(obj.findId());
 			if (vt == null) {
 				this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeUpdate("INSERT INTO JEE_VehicleType(vehicleName) " + 
-							"Values('" + obj.getVehicleName() + "')");
+						.executeQuery("CALL JEE_INSERT_VEHICLETYPE ('" + obj.getVehicleName() + "')");
 				return true;
 			} else {
 				return false;
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -37,7 +36,7 @@ public class VehicleTypeDAO extends DAO<VehicleType> {
 	public boolean delete(VehicleType obj) {
 		try {
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeUpdate("DELETE FROM JEE_VehicleType WHERE idVehicleType = '" + obj.findId() + "'");
+					.executeQuery("CALL JEE_DELETE_VEHICLETYPE ('" + obj.findId() + "')");
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -55,8 +54,9 @@ public class VehicleTypeDAO extends DAO<VehicleType> {
 		int id = 0;
 		try {
 			ResultSet result = this.connect
-					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
-							"SELECT idVehicleType FROM JEE_VehicleType WHERE vehicleName = '" + obj.getVehicleName() + "'");
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeQuery("SELECT idVehicleType FROM JEE_VehicleType WHERE vehicleName = '"
+							+ obj.getVehicleName() + "'");
 			if (result.first()) {
 				id = result.getInt(1);
 			}
@@ -77,8 +77,8 @@ public class VehicleTypeDAO extends DAO<VehicleType> {
 		VehicleType type = null;
 		try {
 			ResultSet result = this.connect
-					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
-							"SELECT vehicleName FROM JEE_VehicleType WHERE idVehicleType = " + i );
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeQuery("SELECT vehicleName FROM JEE_VehicleType WHERE idVehicleType = " + i);
 			if (result.first()) {
 				type = new VehicleType(result.getString("vehicleName"));
 			}
@@ -94,8 +94,8 @@ public class VehicleTypeDAO extends DAO<VehicleType> {
 		ArrayList<VehicleType> lst_vehicleType = new ArrayList<>();
 		try {
 			ResultSet result = this.connect
-					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
-							"SELECT vehicleName FROM JEE_VehicleType ORDER BY idVehicleType");
+					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
+					.executeQuery("SELECT vehicleName FROM JEE_VehicleType ORDER BY idVehicleType");
 			while (result.next()) {
 				VehicleType type = new VehicleType(result.getString("vehicleName"));
 				lst_vehicleType.add(type);

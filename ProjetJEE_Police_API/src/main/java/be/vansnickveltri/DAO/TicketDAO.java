@@ -32,21 +32,21 @@ public class TicketDAO extends DAO<Ticket> {
 		else
 			payed = "N";
 		try {
-			Ticket t = null;
+			Ticket t = new Ticket();
 			t = t.find(obj.findId());
 			if (t == null) {
 				SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
 				String myDate = format.format(obj.getDate());
-				
+
 				this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-						.executeUpdate("INSERT INTO JEE_Ticket (ticketDate, isValidate, isPayed, idVehicle, idUser, ticketHour) "
-								+ "Values('" + myDate + "','" + validate + "','" + payed + "','" + obj.getVehicle().findId() + "','"
-								+ obj.getPoliceman().findId() + "','" + obj.getHour() + "')");
+						.executeQuery("CALL JEE_INSERT_TICKET('" + myDate + "','" + validate + "','" + payed + "','"
+								+ obj.getVehicle().findId() + "','" + obj.getPoliceman().findId() + "','"
+								+ obj.getHour() + "')");
 				return true;
 			} else {
 				return false;
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -57,7 +57,7 @@ public class TicketDAO extends DAO<Ticket> {
 	public boolean delete(Ticket obj) {
 		try {
 			this.connect.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY)
-					.executeUpdate("DELETE FROM JEE_Ticket WHERE idTicket = '" + obj.findId() + "'");
+					.executeQuery("CALL JEE_DELETE_TICKET ('" + obj.findId() + "')");
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -78,8 +78,8 @@ public class TicketDAO extends DAO<Ticket> {
 		else
 			payed = "N";
 		try {
-			this.connect.createStatement().executeUpdate(
-					"UPDATE JEE_Ticket SET isValidate = '" + validate + "', isPayed = '" + payed + "' WHERE idTicket = '" + obj.findId() + "'");
+			this.connect.createStatement().executeQuery("CALL JEE_UPDATE_TICKET ('" + validate
+					+ "', '" + payed + "' , " + obj.findId() + ")");
 			return true;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -120,31 +120,33 @@ public class TicketDAO extends DAO<Ticket> {
 		boolean validate;
 		boolean payed;
 		Vehicle vehicle = new Vehicle();
-		Policeman policeman = new Policeman ();
+		Policeman policeman = new Policeman();
 		try {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
 							"SELECT ticketDate, ticketHour, isValidate, isPayed, idVehicle, idUser FROM JEE_Ticket WHERE idTicket = "
 									+ i);
 			if (result.first()) {
-				if (result.getString("isValidate").equals("Y")) 
+				if (result.getString("isValidate").equals("Y"))
 					validate = true;
-				else 
+				else
 					validate = false;
-				if (result.getString("isPayed").equals("Y")) 
+				if (result.getString("isPayed").equals("Y"))
 					payed = true;
-				else 
+				else
 					payed = false;
 				vehicle = vehicle.find(result.getInt("idVehicle"));
 				policeman = policeman.find(result.getInt("idUser"));
-				ticket = new Ticket(result.getDate("ticketDate"), result.getString("ticketHour"), 0, validate, payed, policeman, vehicle);
-				/*ArrayList<Infraction> lst_infractions = new ArrayList<Infraction>();
-				lst_infractions = new Infraction().findAll(ticket.findId());
-				ticket.setLst_infraction(lst_infractions);
-				ticket.calculate();*/
+				ticket = new Ticket(result.getDate("ticketDate"), result.getString("ticketHour"), 0, validate, payed,
+						policeman, vehicle);
+				/*
+				 * ArrayList<Infraction> lst_infractions = new ArrayList<Infraction>();
+				 * lst_infractions = new Infraction().findAll(ticket.findId());
+				 * ticket.setLst_infraction(lst_infractions); ticket.calculate();
+				 */
 				result.close();
 			}
-			
+
 			return ticket;
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -157,33 +159,35 @@ public class TicketDAO extends DAO<Ticket> {
 		ArrayList<Ticket> lst_ticket = new ArrayList<>();
 		boolean payed;
 		Vehicle vehicle = new Vehicle();
-		Policeman policeman = new Policeman ();
+		Policeman policeman = new Policeman();
 		try {
 			ResultSet result = this.connect
 					.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY).executeQuery(
 							"SELECT ticketDate, ticketHour, isValidate, isPayed, idVehicle, idUser FROM JEE_Ticket "
-							+ "WHERE isValidate = 'N' ORDER BY idTicket");
+									+ "WHERE isValidate = 'N' ORDER BY idTicket");
 			while (result.next()) {
-				if (result.getString("isPayed").equals("Y")) 
+				if (result.getString("isPayed").equals("Y"))
 					payed = true;
-				else 
+				else
 					payed = false;
 				vehicle = vehicle.find(result.getInt("idVehicle"));
 				policeman = policeman.find(result.getInt("idUser"));
-				Ticket ticket = new Ticket(result.getDate("ticketDate"), result.getString("ticketHour"), 0, false, payed, policeman, vehicle);
-				/*ArrayList<Infraction> lst_infractions = new ArrayList<Infraction>();
-				lst_infractions = new Infraction().findAll(ticket.findId());
-				ticket.setLst_infraction(lst_infractions);
-				ticket.calculate();*/
+				Ticket ticket = new Ticket(result.getDate("ticketDate"), result.getString("ticketHour"), 0, false,
+						payed, policeman, vehicle);
+				/*
+				 * ArrayList<Infraction> lst_infractions = new ArrayList<Infraction>();
+				 * lst_infractions = new Infraction().findAll(ticket.findId());
+				 * ticket.setLst_infraction(lst_infractions); ticket.calculate();
+				 */
 				lst_ticket.add(ticket);
 			}
-			
-			for(Ticket ticket : lst_ticket) {
+
+			for (Ticket ticket : lst_ticket) {
 				ticket.findTotalAmount();
 				ticket.initLstInfcations();
 			}
 			return lst_ticket;
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;

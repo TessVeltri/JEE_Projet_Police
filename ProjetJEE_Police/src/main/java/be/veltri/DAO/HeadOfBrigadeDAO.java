@@ -40,15 +40,11 @@ public class HeadOfBrigadeDAO extends DAO<HeadOfBrigade>{
 		paramsPost.add("typeUser", String.valueOf(obj.getTypeUser()));
 		paramsPost.add("idHeadOfBrigade", null);
 		
-		ClientResponse res = resource.path("user/find").post(ClientResponse.class, paramsPost);
-		int id = res.getEntity(Integer.class);
+		String res = resource.path("user/find").post(String.class, paramsPost);
+		int id = Integer.parseInt(res);
 		
-		int httpResponseCode = res.getStatus();
-		
-		if(httpResponseCode == 201)
-			return id;
-		else
-			return 0;
+		return id;
+	
 	}
 
 	@Override
